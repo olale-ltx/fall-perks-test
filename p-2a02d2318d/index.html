@@ -318,6 +318,9 @@
   .title.fx-cur { cursor: none; } /* JS swaps the static flame for the breathing one below */
   .flame-cur { position: fixed; left: 0; top: 0; z-index: 60; width: 32px; height: 32px; pointer-events: none; opacity: 0; transition: opacity .15s ease; }
   .flame-cur.is-on { opacity: 1; }
+  .flame-trail { position: fixed; z-index: 59; transform-origin: 50% 70%; width: 32px; height: 32px; pointer-events: none; animation: flame-trail .7s cubic-bezier(.22,1,.36,1) forwards; } /* .7s = how long a trail flame lives */
+  .flame-trail svg { display: block; overflow: visible; }
+  @keyframes flame-trail { from { opacity: 1; scale: .9; translate: 0 0; } to { opacity: 0; scale: .3; translate: var(--tx, 0) -18px; } }
   .flame-cur svg { display: block; overflow: visible; }
   .fc-breathe { transform-box: fill-box; transform-origin: 50% 100%; animation: fc-breathe 1.8s ease-in-out infinite alternate; } /* 1.8s = breath speed */
   @keyframes fc-breathe { from { transform: scale(.88); } to { transform: scale(1.12); } } /* .88–1.12 = breath depth */
@@ -748,10 +751,22 @@ cards.forEach(function (card) {
   document.body.appendChild(cur);
   t.classList.add('fx-cur');
   function place(e) { cur.style.transform = 'translate(' + (e.clientX - 16) + 'px,' + (e.clientY - 7) + 'px)'; } /* 16 7 = flame tip hotspot */
+  /* trail: small flames left behind as the cursor moves, each drifts up, shrinks and fades */
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches, lx = -999, ly = -999, live = 0, TRAIL_GAP = 22, TRAIL_MAX = 18; /* gap = px between flames, max = flames on screen */
+  var trailSvg = cur.innerHTML.replace('class="fc-breathe"', '').replace(/id="fc-dots"/g, 'id="fc-dots-t"').replace(/#fc-dots\)/g, '#fc-dots-t)');
+  function trail(e) {
+    if (calm || live >= TRAIL_MAX) return;
+    var dx = e.clientX - lx, dy = e.clientY - ly; if (dx * dx + dy * dy < TRAIL_GAP * TRAIL_GAP) return;
+    lx = e.clientX; ly = e.clientY; live++;
+    var f = document.createElement('div'); f.className = 'flame-trail'; f.setAttribute('aria-hidden', 'true'); f.innerHTML = trailSvg;
+    f.style.left = (e.clientX - 16) + 'px'; f.style.top = (e.clientY - 7) + 'px'; f.style.setProperty('--tx', (Math.random() * 12 - 6).toFixed(1) + 'px'); /* left/top, so the shrink animation scales around the flame itself */
+    f.addEventListener('animationend', function () { f.remove(); live--; }, { once: true });
+    document.body.appendChild(f);
+  }
   t.addEventListener('pointermove', function (e) {
     var r = t.getBoundingClientRect(), h = t.offsetHeight, y = e.clientY - r.top, x = e.clientX - r.left - k * (h - y);
     t.style.setProperty('--mx', x + 'px'); t.style.setProperty('--my', y + 'px'); dots.style.setProperty('--mx', x + 'px'); dots.style.setProperty('--my', y + 'px');
-    place(e);
+    place(e); trail(e);
   });
   t.addEventListener('pointerenter', function (e) { t.classList.add('is-glow'); dots.classList.add('is-on'); place(e); cur.classList.add('is-on'); });
   t.addEventListener('pointerleave', function () { t.classList.remove('is-glow'); dots.classList.remove('is-on'); cur.classList.remove('is-on'); });
