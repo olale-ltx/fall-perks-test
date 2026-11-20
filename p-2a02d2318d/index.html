@@ -315,12 +315,12 @@
   /* custom cursor over the title: glowing Hanukkah flame; hotspot = flame tip (16 7) */
   .title { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3Cfilter id='g' x='-60%25' y='-60%25' width='220%25' height='220%25'%3E%3CfeGaussianBlur stdDeviation='2.4'/%3E%3C/filter%3E%3C/defs%3E%3Cg transform='translate%2816 18%29 scale%28.7%29 translate%28-16 -18%29'%3E%3Cpath d='M16 2C22 10 26 15 26 21a10 10 0 0 1-20 0C6 15 10 10 16 2Z' fill='%23FFB02E' opacity='.85' filter='url%28%23g%29'/%3E%3Cpath d='M16 2C22 10 26 15 26 21a10 10 0 0 1-20 0C6 15 10 10 16 2Z' fill='%23FFC83D' stroke='%23FFE27A' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M16 11c3 4 5.5 6.5 5.5 10.5a5.5 5.5 0 0 1-11 0C10.5 17.5 13 15 16 11Z' fill='%23F7701F'/%3E%3C/g%3E%3C/svg%3E") 16 7, pointer; }
   .title span { display: block; }
-  .title.fx-cur { cursor: none; } /* JS swaps the static flame for the breathing one below */
+  .title.fx-cur, .hero.fx-cur, .hero.fx-cur * { cursor: none; } /* the breathing flame (+ trail) replaces the pointer across the whole hero */
   .flame-cur { position: fixed; left: 0; top: 0; z-index: 60; width: 32px; height: 32px; pointer-events: none; opacity: 0; transition: opacity .15s ease; }
   .flame-cur.is-on { opacity: 1; }
-  .flame-trail { position: fixed; z-index: 59; transform-origin: 50% 70%; width: 32px; height: 32px; pointer-events: none; animation: flame-trail .7s cubic-bezier(.22,1,.36,1) forwards; } /* .7s = how long a trail flame lives */
+  .flame-trail { position: fixed; z-index: 59; transform-origin: 50% 70%; width: 32px; height: 32px; pointer-events: none; animation: flame-trail calc(var(--trail-life, 1.25) * 1s) cubic-bezier(.22,1,.36,1) forwards; } /* trail settings: Colors panel */
   .flame-trail svg { display: block; overflow: visible; }
-  @keyframes flame-trail { from { opacity: 1; scale: .9; translate: 0 0; } to { opacity: 0; scale: .3; translate: var(--tx, 0) -18px; } }
+  @keyframes flame-trail { from { opacity: 1; scale: var(--trail-scale, 1.5); translate: 0 0; } to { opacity: 0; scale: calc(var(--trail-scale, 1.5) * .33); translate: var(--tx, 0) calc(var(--trail-rise, 18) * -1px); } }
   .flame-cur svg { display: block; overflow: visible; }
   .fc-breathe { transform-box: fill-box; transform-origin: 50% 100%; animation: fc-breathe 1.8s ease-in-out infinite alternate; } /* 1.8s = breath speed */
   @keyframes fc-breathe { from { transform: scale(.88); } to { transform: scale(1.12); } } /* .88–1.12 = breath depth */
@@ -749,27 +749,39 @@ cards.forEach(function (card) {
   cur.className = 'flame-cur'; cur.setAttribute('aria-hidden', 'true');
   cur.innerHTML = '<svg viewBox="0 0 32 32" width="32" height="32" focusable="false"><defs><pattern id="fc-dots" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="2.2" height="2.2" fill="#fff"/><circle cx="1.1" cy="1.1" r=".6" style="fill:var(--flame)"/></pattern></defs><g transform="translate(16 22.6) scale(.6)"><g class="fc-breathe"><path d="M0,-26 C9,-14 12,-4 8,4 C5,10 -5,10 -8,4 C-12,-4 -9,-14 0,-26Z" style="fill:var(--flame);stroke:var(--flame);stroke-width:5;stroke-linejoin:round;paint-order:stroke"/><path d="M0,-12 C5,-6 6,-1 4,3 C2,6 -2,6 -4,3 C-6,-1 -5,-6 0,-12Z" fill="url(#fc-dots)"/></g></g></svg>'; /* same flame as the hanukkiah: solid ink + dotted core */
   document.body.appendChild(cur);
-  t.classList.add('fx-cur');
+  t.classList.add('fx-cur'); var hero = t.closest('.hero') || t; hero.classList.add('fx-cur');
   function place(e) { cur.style.transform = 'translate(' + (e.clientX - 16) + 'px,' + (e.clientY - 7) + 'px)'; } /* 16 7 = flame tip hotspot */
   /* trail: small flames left behind as the cursor moves, each drifts up, shrinks and fades */
-  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches, lx = -999, ly = -999, live = 0, TRAIL_GAP = 22, TRAIL_MAX = 18; /* gap = px between flames, max = flames on screen */
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches, lx = -999, ly = -999, rootCS = getComputedStyle(document.documentElement); /* gap + max come from the Colors panel */
   var trailSvg = cur.innerHTML.replace('class="fc-breathe"', '').replace(/id="fc-dots"/g, 'id="fc-dots-t"').replace(/#fc-dots\)/g, '#fc-dots-t)');
-  function trail(e) {
-    if (calm || live >= TRAIL_MAX) return;
-    var dx = e.clientX - lx, dy = e.clientY - ly; if (dx * dx + dy * dy < TRAIL_GAP * TRAIL_GAP) return;
-    lx = e.clientX; ly = e.clientY; live++;
+  var flames = []; /* live trail flames, oldest first */
+  function drop(x, y) {
     var f = document.createElement('div'); f.className = 'flame-trail'; f.setAttribute('aria-hidden', 'true'); f.innerHTML = trailSvg;
-    f.style.left = (e.clientX - 16) + 'px'; f.style.top = (e.clientY - 7) + 'px'; f.style.setProperty('--tx', (Math.random() * 12 - 6).toFixed(1) + 'px'); /* left/top, so the shrink animation scales around the flame itself */
-    f.addEventListener('animationend', function () { f.remove(); live--; }, { once: true });
-    document.body.appendChild(f);
+    f.style.left = (x - 16) + 'px'; f.style.top = (y - 7) + 'px'; f.style.setProperty('--tx', (Math.random() * 12 - 6).toFixed(1) + 'px'); /* left/top, so the shrink animation scales around the flame itself */
+    f.addEventListener('animationend', function () { f.remove(); var i = flames.indexOf(f); if (i > -1) flames.splice(i, 1); }, { once: true });
+    document.body.appendChild(f); flames.push(f);
+  }
+  function trail(e) {
+    var TRAIL_MAX = parseFloat(rootCS.getPropertyValue('--trail-max')), TRAIL_GAP = parseFloat(rootCS.getPropertyValue('--trail-gap')) || 25; if (isNaN(TRAIL_MAX)) TRAIL_MAX = 20;
+    if (calm || TRAIL_MAX <= 0) return;
+    if (lx < -900) { lx = e.clientX; ly = e.clientY; return; }
+    var dx = e.clientX - lx, dy = e.clientY - ly, dist = Math.sqrt(dx * dx + dy * dy); if (dist < TRAIL_GAP) return;
+    var n = Math.min(Math.floor(dist / TRAIL_GAP), 12); /* fast moves: fill the jump with flames instead of leaving a gap */
+    for (var i = 1; i <= n; i++) drop(lx + dx * i / n, ly + dy * i / n);
+    lx = e.clientX; ly = e.clientY;
+    while (flames.length > TRAIL_MAX) flames.shift().remove(); /* over the limit: drop the oldest, never stop drawing */
   }
   t.addEventListener('pointermove', function (e) {
     var r = t.getBoundingClientRect(), h = t.offsetHeight, y = e.clientY - r.top, x = e.clientX - r.left - k * (h - y);
     t.style.setProperty('--mx', x + 'px'); t.style.setProperty('--my', y + 'px'); dots.style.setProperty('--mx', x + 'px'); dots.style.setProperty('--my', y + 'px');
-    place(e); trail(e);
+
   });
-  t.addEventListener('pointerenter', function (e) { t.classList.add('is-glow'); dots.classList.add('is-on'); place(e); cur.classList.add('is-on'); });
-  t.addEventListener('pointerleave', function () { t.classList.remove('is-glow'); dots.classList.remove('is-on'); cur.classList.remove('is-on'); });
+  t.addEventListener('pointerenter', function () { t.classList.add('is-glow'); dots.classList.add('is-on'); });
+  t.addEventListener('pointerleave', function () { t.classList.remove('is-glow'); dots.classList.remove('is-on'); });
+  /* flame cursor + trail: whole hero */
+  hero.addEventListener('pointermove', function (e) { if (e.pointerType !== 'mouse') return; place(e); cur.classList.add('is-on'); trail(e); });
+  hero.addEventListener('pointerenter', function (e) { place(e); cur.classList.add('is-on'); });
+  hero.addEventListener('pointerleave', function () { cur.classList.remove('is-on'); lx = ly = -999; });
 })();
 </script>
 <button class="ctl-toggle" type="button" aria-expanded="false" aria-controls="ctl">Colors</button>
@@ -786,14 +798,14 @@ cards.forEach(function (card) {
     ['Card text', [['info', 'Info text'], ['pill', 'Date & place pill']]],
     ['Rotating badge', [['badge', 'Colour']]],
     ['Links', [['link', 'Text links on hover']]],
-    ['Cursor', [['flame', 'Flame over the title']]]
+    ['Cursor', [['flame', 'Flame over the hero']]]
   ];
-  var RANGES = [['hl-size', 'Highlight size (px)', 100, 520, 10, 370], ['hl-step', 'Highlight dot spacing', 5, 24, 1, 11], ['hl-dot', 'Highlight dot size', 1, 9, .2, 4.6], ['gap', 'Card gap (px)', 0, 24, 1, 1], ['speck-o', 'Paper specks', 0, 1, .05, .35], ['grain-o', 'Ink grain', 0, 1, .05, 0]];
+  var RANGES = [['hl-size', 'Highlight size (px)', 100, 520, 10, 370], ['hl-step', 'Highlight dot spacing', 5, 24, 1, 11], ['hl-dot', 'Highlight dot size', 1, 9, .2, 4.6], ['gap', 'Card gap (px)', 0, 24, 1, 1], ['trail-max', 'Trail: flames (0 = off)', 0, 150, 1, 20], ['trail-gap', 'Trail: spacing (px)', 2, 60, 1, 25], ['trail-life', 'Trail: lifetime (s)', .2, 3, .05, 1.25], ['trail-scale', 'Trail: flame size', .3, 2, .05, 1.5], ['trail-rise', 'Trail: float up (px)', 0, 60, 1, 18], ['speck-o', 'Paper specks', 0, 1, .05, .35], ['grain-o', 'Ink grain', 0, 1, .05, 0]];
   var KEY = 'fp-v6-palette', root = document.documentElement, css = getComputedStyle(root);
   var DEF = {}; GROUPS.forEach(function (g) { g[1].forEach(function (r) { DEF[r[0]] = css.getPropertyValue('--' + r[0]).trim().toUpperCase(); }); });
   RANGES.forEach(function (r) { DEF[r[0]] = r[5]; });
   var state = Object.assign({}, DEF);
-  try { var saved = JSON.parse(localStorage.getItem(KEY)); if (saved) { state = Object.assign(state, saved); } } catch (e) {}
+  try { var saved = JSON.parse(localStorage.getItem(KEY)); if (saved) {  state = Object.assign(state, saved); } } catch (e) {}
   var panel = document.getElementById('ctl'), toggle = document.querySelector('.ctl-toggle'), inputs = {};
   var out = document.createElement('textarea'); out.readOnly = true; out.setAttribute('aria-label', 'Current palette as CSS');
   GROUPS.forEach(function (g) {
@@ -807,7 +819,7 @@ cards.forEach(function (card) {
       inputs[r[0]] = [pick, hex]; panel.appendChild(row);
     });
   });
-  var gh = document.createElement('h3'); gh.textContent = 'Title highlight, cards & grunge'; panel.appendChild(gh);
+  var gh = document.createElement('h3'); gh.textContent = 'Title highlight, trail, cards & grunge'; panel.appendChild(gh);
   RANGES.forEach(function (r) {
     var row = document.createElement('label'); row.className = 'ctl-row';
     row.innerHTML = '<span>' + r[1] + '</span><input type="range" min="' + r[2] + '" max="' + r[3] + '" step="' + r[4] + '" style="width:96px"><output style="width:36px;text-align:right"></output>';
