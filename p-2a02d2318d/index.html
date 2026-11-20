@@ -315,7 +315,8 @@
   /* custom cursor over the title: glowing Hanukkah flame; hotspot = flame tip (16 7) */
   .title { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3Cfilter id='g' x='-60%25' y='-60%25' width='220%25' height='220%25'%3E%3CfeGaussianBlur stdDeviation='2.4'/%3E%3C/filter%3E%3C/defs%3E%3Cg transform='translate%2816 18%29 scale%28.7%29 translate%28-16 -18%29'%3E%3Cpath d='M16 2C22 10 26 15 26 21a10 10 0 0 1-20 0C6 15 10 10 16 2Z' fill='%23FFB02E' opacity='.85' filter='url%28%23g%29'/%3E%3Cpath d='M16 2C22 10 26 15 26 21a10 10 0 0 1-20 0C6 15 10 10 16 2Z' fill='%23FFC83D' stroke='%23FFE27A' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M16 11c3 4 5.5 6.5 5.5 10.5a5.5 5.5 0 0 1-11 0C10.5 17.5 13 15 16 11Z' fill='%23F7701F'/%3E%3C/g%3E%3C/svg%3E") 16 7, pointer; }
   .title span { display: block; }
-  .title.fx-cur, .hero.fx-cur, .hero.fx-cur * { cursor: none; } /* the breathing flame (+ trail) replaces the pointer across the whole hero */
+  .title.fx-cur, .fx-cur, .fx-cur * { cursor: none; } /* the breathing flame (+ trail) replaces the pointer in the hero and footer */
+  .fx-cur a, .fx-cur a * { cursor: pointer; } /* links keep the normal hand */
   .flame-cur { position: fixed; left: 0; top: 0; z-index: 60; width: 32px; height: 32px; pointer-events: none; opacity: 0; transition: opacity .15s ease; }
   .flame-cur.is-on { opacity: 1; }
   .flame-trail { position: fixed; z-index: 59; transform-origin: 50% 70%; width: 32px; height: 32px; pointer-events: none; animation: flame-trail calc(var(--trail-life, 1.25) * 1s) cubic-bezier(.22,1,.36,1) forwards; } /* trail settings: Colors panel */
@@ -749,7 +750,7 @@ cards.forEach(function (card) {
   cur.className = 'flame-cur'; cur.setAttribute('aria-hidden', 'true');
   cur.innerHTML = '<svg viewBox="0 0 32 32" width="32" height="32" focusable="false"><defs><pattern id="fc-dots" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="2.2" height="2.2" fill="#fff"/><circle cx="1.1" cy="1.1" r=".6" style="fill:var(--flame)"/></pattern></defs><g transform="translate(16 22.6) scale(.6)"><g class="fc-breathe"><path d="M0,-26 C9,-14 12,-4 8,4 C5,10 -5,10 -8,4 C-12,-4 -9,-14 0,-26Z" style="fill:var(--flame);stroke:var(--flame);stroke-width:5;stroke-linejoin:round;paint-order:stroke"/><path d="M0,-12 C5,-6 6,-1 4,3 C2,6 -2,6 -4,3 C-6,-1 -5,-6 0,-12Z" fill="url(#fc-dots)"/></g></g></svg>'; /* same flame as the hanukkiah: solid ink + dotted core */
   document.body.appendChild(cur);
-  t.classList.add('fx-cur'); var hero = t.closest('.hero') || t; hero.classList.add('fx-cur');
+  t.classList.add('fx-cur'); var hero = t.closest('.hero') || t; var zones = [hero, document.querySelector('.foot')].filter(Boolean); zones.forEach(function (z) { z.classList.add('fx-cur'); });
   function place(e) { cur.style.transform = 'translate(' + (e.clientX - 16) + 'px,' + (e.clientY - 7) + 'px)'; } /* 16 7 = flame tip hotspot */
   /* trail: small flames left behind as the cursor moves, each drifts up, shrinks and fades */
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches, lx = -999, ly = -999, rootCS = getComputedStyle(document.documentElement); /* gap + max come from the Colors panel */
@@ -779,9 +780,15 @@ cards.forEach(function (card) {
   t.addEventListener('pointerenter', function () { t.classList.add('is-glow'); dots.classList.add('is-on'); });
   t.addEventListener('pointerleave', function () { t.classList.remove('is-glow'); dots.classList.remove('is-on'); });
   /* flame cursor + trail: whole hero */
-  hero.addEventListener('pointermove', function (e) { if (e.pointerType !== 'mouse') return; place(e); cur.classList.add('is-on'); trail(e); });
-  hero.addEventListener('pointerenter', function (e) { place(e); cur.classList.add('is-on'); });
-  hero.addEventListener('pointerleave', function () { cur.classList.remove('is-on'); lx = ly = -999; });
+  zones.forEach(function (z) {
+    z.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      place(e);
+      if (e.target.closest('a')) { cur.classList.remove('is-on'); lx = ly = -999; return; } /* over a link: normal hand, no flame */
+      cur.classList.add('is-on'); trail(e);
+    });
+    z.addEventListener('pointerleave', function () { cur.classList.remove('is-on'); lx = ly = -999; });
+  });
 })();
 </script>
 <button class="ctl-toggle" type="button" aria-expanded="false" aria-controls="ctl">Colors</button>
@@ -798,7 +805,7 @@ cards.forEach(function (card) {
     ['Card text', [['info', 'Info text'], ['pill', 'Date & place pill']]],
     ['Rotating badge', [['badge', 'Colour']]],
     ['Links', [['link', 'Text links on hover']]],
-    ['Cursor', [['flame', 'Flame over the hero']]]
+    ['Cursor', [['flame', 'Flame cursor (hero + footer)']]]
   ];
   var RANGES = [['hl-size', 'Highlight size (px)', 100, 520, 10, 370], ['hl-step', 'Highlight dot spacing', 5, 24, 1, 11], ['hl-dot', 'Highlight dot size', 1, 9, .2, 4.6], ['gap', 'Card gap (px)', 0, 24, 1, 1], ['trail-max', 'Trail: flames (0 = off)', 0, 150, 1, 20], ['trail-gap', 'Trail: spacing (px)', 2, 60, 1, 25], ['trail-life', 'Trail: lifetime (s)', .2, 3, .05, 1.25], ['trail-scale', 'Trail: flame size', .3, 2, .05, 1.5], ['trail-rise', 'Trail: float up (px)', 0, 60, 1, 18], ['speck-o', 'Paper specks', 0, 1, .05, .35], ['grain-o', 'Ink grain', 0, 1, .05, 0]];
   var KEY = 'fp-v6-palette', root = document.documentElement, css = getComputedStyle(root);
