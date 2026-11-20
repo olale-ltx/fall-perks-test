@@ -445,7 +445,7 @@
     .flip-inner, .reveal > svg, .reveal-info, .reveal-info > *, .cover, .cover > svg, .cover-info, .cover-info > * { transition: none !important; }
   }
 
- width: 100%; height: 120px; font: 12px/1.4 ui-monospace, Menlo, monospace; background: #2A1419; color: inherit; border: 0; border-radius: 8px; padding: 8px; resize: vertical; }
+  .ctl-toggle, .ctl { display: none !important; } /* clean build: no controls */
 </style>
 </head>
 <body>
@@ -812,7 +812,7 @@ cards.forEach(function (card) {
   var DEF = {}; GROUPS.forEach(function (g) { g[1].forEach(function (r) { DEF[r[0]] = css.getPropertyValue('--' + r[0]).trim().toUpperCase(); }); });
   RANGES.forEach(function (r) { DEF[r[0]] = r[5]; });
   var state = Object.assign({}, DEF);
-  try { var saved = JSON.parse(localStorage.getItem(KEY)); if (saved) {  state = Object.assign(state, saved); } } catch (e) {}
+  try { var saved = null; if (saved) {  state = Object.assign(state, saved); } } catch (e) {}
   var panel = document.getElementById('ctl'), toggle = document.querySelector('.ctl-toggle'), inputs = {};
   var out = document.createElement('textarea'); out.readOnly = true; out.setAttribute('aria-label', 'Current palette as CSS');
   GROUPS.forEach(function (g) {
@@ -846,7 +846,7 @@ cards.forEach(function (card) {
   function apply() {
     Object.keys(state).forEach(function (k) { root.style.setProperty('--' + k, state[k]); var i = inputs[k]; if (!i) return; if (i.range) { i.range.value = state[k]; i.out.textContent = state[k]; } else { i[0].value = state[k]; i[1].value = state[k]; } });
     out.value = ':root {\n' + Object.keys(state).map(function (k) { return '  --' + k + ': ' + state[k] + ';'; }).join('\n') + '\n}';
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    
   }
   /* grunge textures (generated once; ink grain redrawn when its slider changes) */
   function tile(size, draw) { var c = document.createElement('canvas'); c.width = c.height = size; var x = c.getContext('2d'); draw(x, size); return new Promise(function (r) { c.toBlob(function (b) { r(URL.createObjectURL(b)); }); }); }
