@@ -388,7 +388,7 @@
   .grid > .panel .b-desc::-webkit-scrollbar-thumb { background: var(--ink); }
   .grid > .panel .code, .grid > .panel .code:hover { border-color: color-mix(in srgb, var(--pill) 78%, #000); color: var(--ink); } /* code box border = date pill colour, a touch darker (78% = lighter/darker) */
   .grid > .panel .b-cta { background: var(--ink); color: var(--cr); transition: transform .35s cubic-bezier(.22,1,.36,1), background-color .2s ease; }
-  .grid > .panel .b-cta:is(:hover, :focus-visible) { background: var(--link); } /* same pink as text-link hover (Colors panel: Links) */
+  .grid > .panel .b-cta:is(:hover, :focus-visible) { background: var(--tlink); } /* same pink as text-link hover (Colors panel: Links) */
   .grid > .panel .he { opacity: .8; }
   .panel > svg {
     --sh1: var(--ink); /* solid ink */
@@ -408,10 +408,10 @@
   .badge { color: var(--badge); } /* rotating circle colour (Colors panel) */
   .grid { gap: calc(var(--gap, 1) * 1px); } /* v4: gap between cards (Colors panel) */
   /* info text on the back of the cards */
-  :root { --accent: #FF61CD; --flame: var(--accent); --link: var(--accent); --hl: var(--accent); --badge: var(--accent); /* one accent colour drives highlight, badge, link hover and cursor */ --info: #161211; --pill: #E6E6E6; --speck-o: .35; --grain-o: 0; --hl-size: 370; --hl-step: 11; --hl-dot: 4.6; --gap: 1; } /* --pill = date & place pill, warm beige like v5 */
+  :root { --accent: #FF61CD; --flame: var(--accent); --hl: var(--accent); --badge: var(--accent); /* one accent colour drives highlight, badge and cursor */ --tlink: #FF61CD; /* text links + button hover: own colour */ --info: #161211; --pill: #E6E6E6; --speck-o: .35; --grain-o: 0; --hl-size: 370; --hl-step: 11; --hl-dot: 4.6; --gap: 1; } /* --pill = date & place pill, warm beige like v5 */
   .grid > .panel .cover-info { color: var(--info); }
   .b-desc a, .b-desc a.ul, .side a, .side a.ul, .foot-ask, .foot-top { color: inherit; transition: color .2s ease; }
-  .b-desc a:is(:hover, :focus-visible), .side a:is(:hover, :focus-visible), .foot-ask:is(:hover, :focus-visible), .foot-top:is(:hover, :focus-visible) { color: var(--link); } /* text links: same as text, pink on hover (Colors panel) */
+  .b-desc a:is(:hover, :focus-visible), .side a:is(:hover, :focus-visible), .foot-ask:is(:hover, :focus-visible), .foot-top:is(:hover, :focus-visible) { color: var(--tlink); } /* text links: same as text, pink on hover (Colors panel) */
   .grid > .panel.cover > .head, .grid > .panel.cover:is(.is-hover, .is-open, :has(:focus-visible)) > .head { color: var(--on); } /* card headings in the card ink */
   .grid > .panel .cover-info .b-eyebrow { color: var(--info); background: var(--pill); border-color: transparent; } /* same pill on every card */
   .grid > .panel .cover-info .code { color: var(--info); }
@@ -433,6 +433,13 @@
   .ctl-row input[type=text] { width: 70px; font: 12px ui-monospace, Menlo, monospace; background: #26120E; color: inherit; border: 1px solid #3a2420; border-radius: 6px; padding: 4px 6px; }
   .ctl-btns { display: flex; gap: 8px; margin-top: 12px; }
   .ctl-btns button { flex: 1; font: inherit; color: inherit; background: #26120E; border: 1px solid #3a2420; border-radius: 8px; padding: 8px; cursor: pointer; }
+  .ctl-save { display: flex; gap: 8px; }
+  .ctl-save input { flex: 1; min-width: 0; font: inherit; background: #26120E; color: inherit; border: 1px solid #3a2420; border-radius: 8px; padding: 7px 9px; }
+  .ctl-save button, .ctl-pre button { font: inherit; color: inherit; background: #26120E; border: 1px solid #3a2420; border-radius: 8px; padding: 7px 10px; cursor: pointer; }
+  .ctl-pre { display: flex; gap: 6px; margin-top: 6px; }
+  .ctl-pre .ctl-apply { flex: 1; display: flex; align-items: center; gap: 8px; text-align: left; }
+  .ctl-pre .sw { display: flex; flex: none; } .ctl-pre .sw i { width: 10px; height: 16px; display: block; }
+  .ctl-note { font-size: .6875rem; opacity: .5; margin: 6px 0 0; }
   .ctl textarea { width: 100%; height: 96px; margin-top: 10px; font: 11px/1.4 ui-monospace, Menlo, monospace; background: #26120E; color: inherit; border: 0; border-radius: 8px; padding: 8px; resize: vertical; }
   .ctl-toggle:focus-visible, .ctl button:focus-visible, .ctl input:focus-visible { outline: 2px solid var(--ye); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) {
@@ -800,7 +807,8 @@ cards.forEach(function (card) {
     ['Page', [['page', 'Page background'], ['cr', 'Page text']]],
     ['Cards', [['a-bg', 'Tint'], ['a-ink', 'Ink']]],
     ['Title gradient', [['t1', 'Colour 1'], ['t2', 'Colour 2']]],
-    ['Accent (highlight, badge, link + button hover, cursor)', [['accent', 'Accent colour']]],
+    ['Accent (highlight, badge, cursor)', [['accent', 'Accent colour']]],
+    ['Links', [['tlink', 'Text links + button hover']]],
     ['Card text', [['info', 'Info text'], ['pill', 'Date & place pill']]]
   ];
   var RANGES = [['hl-size', 'Highlight size (px)', 100, 520, 10, 370], ['hl-step', 'Highlight dot spacing', 5, 24, 1, 11], ['hl-dot', 'Highlight dot size', 1, 9, .2, 4.6], ['gap', 'Card gap (px)', 0, 24, 1, 1], ['trail-max', 'Trail: flames (0 = off)', 0, 150, 1, 20], ['trail-gap', 'Trail: spacing (px)', 2, 60, 1, 25], ['trail-life', 'Trail: lifetime (s)', .2, 3, .05, 1.25], ['trail-scale', 'Trail: flame size', .3, 2, .05, 1.5], ['trail-rise', 'Trail: float up (px)', 0, 60, 1, 18], ['speck-o', 'Paper specks', 0, 1, .05, .35], ['grain-o', 'Ink grain', 0, 1, .05, 0]];
@@ -830,9 +838,42 @@ cards.forEach(function (card) {
     rg.addEventListener('input', function () { state[r[0]] = +rg.value; apply(); if (r[0] === 'grain-o') regrain(); if (r[0] === 'hl-step' || r[0] === 'hl-dot') document.dispatchEvent(new Event('fp-hl')); });
     inputs[r[0]] = { range: rg, out: o }; panel.appendChild(row);
   });
+  /* presets: saved in this browser */
+  var PKEY = KEY + '-presets', presets = {}; try { presets = JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) {}
+  var BUILT = { 'Default': DEF };
+  var ph = document.createElement('h3'); ph.textContent = 'Presets'; panel.appendChild(ph);
+  var save = document.createElement('div'); save.className = 'ctl-save';
+  save.innerHTML = '<input type="text" placeholder="Preset name" aria-label="Preset name" maxlength="40"><button type="button">Save</button>';
+  panel.appendChild(save);
+  var list = document.createElement('div'); panel.appendChild(list);
+  function storeP() { try { localStorage.setItem(PKEY, JSON.stringify(presets)); } catch (e) {} }
+  function useP(p) { state = Object.assign({}, DEF, p); apply(); regrain(); document.dispatchEvent(new Event('fp-hl')); }
+  function renderP() {
+    list.innerHTML = '';
+    var safe = function (c) { return /^#[0-9a-f]{6}$/i.test(c) ? c : '#000'; };
+    Object.keys(BUILT).concat(Object.keys(presets).filter(function (n) { return !BUILT.hasOwnProperty(n); })).forEach(function (name) {
+      var built = BUILT.hasOwnProperty(name), edited = built && presets.hasOwnProperty(name), p = presets[name] || BUILT[name], row = document.createElement('div'); row.className = 'ctl-pre'; /* a built-in can be overwritten too; the saved copy wins, ↺ restores it */
+      var a = document.createElement('button'); a.type = 'button'; a.className = 'ctl-apply';
+      a.innerHTML = '<span class="sw"><i style="background:' + safe(p.page) + '"></i><i style="background:' + safe(p['a-bg']) + '"></i><i style="background:' + safe(p.accent) + '"></i></span>';
+      a.appendChild(document.createTextNode(name)); /* name as text, never HTML */
+      a.addEventListener('click', function () { useP(p); });
+      var u = document.createElement('button'); u.type = 'button'; u.textContent = 'Update'; u.title = 'Overwrite this preset with the current settings'; u.setAttribute('aria-label', 'Update preset ' + name + ' with current settings');
+      u.addEventListener('click', function () { presets[name] = Object.assign({}, state); storeP(); renderP(); var nb = list.querySelector('[data-p="' + CSS.escape(name) + '"]'); if (nb) { nb.textContent = 'Saved'; setTimeout(function () { nb.textContent = 'Update'; }, 1200); } });
+      u.dataset.p = name;
+      var d = document.createElement('button'); d.type = 'button'; d.textContent = built ? '↺' : '×'; d.title = built ? 'Restore the original preset' : 'Delete preset'; d.setAttribute('aria-label', (built ? 'Restore original preset ' : 'Delete preset ') + name);
+      d.addEventListener('click', function () { delete presets[name]; storeP(); renderP(); });
+      row.appendChild(a); row.appendChild(u); if (!built || edited) row.appendChild(d); list.appendChild(row);
+    });
+  }
+  save.querySelector('button').addEventListener('click', function () {
+    var inp = save.querySelector('input'), name = inp.value.trim() || ('Preset ' + (Object.keys(presets).length + 1));
+    presets[name] = Object.assign({}, state); storeP(); renderP(); inp.value = '';
+  });
+  renderP();
   var btns = document.createElement('div'); btns.className = 'ctl-btns';
   btns.innerHTML = '<button type="button" data-a="reset">Reset to palette</button><button type="button" data-a="copy">Copy CSS</button>';
   panel.appendChild(btns); panel.appendChild(out);
+  var note = document.createElement('p'); note.className = 'ctl-note'; note.textContent = 'Presets are saved in this browser only. Use "Copy CSS" to send one.'; panel.appendChild(note);
   btns.addEventListener('click', function (e) {
     var a = e.target.dataset.a;
     if (a === 'reset') { state = Object.assign({}, DEF); apply(); regrain(); document.dispatchEvent(new Event('fp-hl')); }
