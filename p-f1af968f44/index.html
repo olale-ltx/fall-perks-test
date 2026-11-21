@@ -299,7 +299,7 @@
   .hero { position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(104px, 11vw, 168px) clamp(20px, 4vw, 64px) clamp(16px, 2vw, 32px); background: var(--page); color: var(--cr); overflow: hidden; } /* top space leaves room for the badge */
   .hero-bottom { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: end; gap: clamp(24px, 4vw, 72px); }
   .title-wrap { position: relative; width: fit-content; max-width: 100%; }
-  .title { margin: 0; font-family: "Germania One", Impact, sans-serif; font-weight: 400; font-size: clamp(7rem, 2rem + 13vw, 17rem); line-height: .84; letter-spacing: .01em; text-transform: uppercase; transform: skewX(-10deg); transform-origin: left bottom; background: radial-gradient(circle clamp(200px, 22vw, 420px) at var(--mx) var(--my), rgba(250, 150, 255, calc(var(--glow) * .85)), rgba(220, 120, 255, calc(var(--glow) * .45)) 45%, transparent 78%) /* light rose → soft lilac: lighter than the gradient so it shows over orange and pink */ 0 0 / 100% 100% no-repeat, linear-gradient(100deg, #F14401 0%, #FF64DD 35%, #F14401 70%, #FF64DD 100%) 0 50% / 220% 100%; -webkit-background-clip: text; background-clip: text; background-blend-mode: screen, normal; color: transparent; transition: --glow .45s ease, --mx .25s ease-out, --my .25s ease-out, filter .45s ease; animation: title-flow 5s ease-in-out infinite alternate; } /* campaign orange ↔ vivid pink drifting through the letters; 5s = speed (lower = faster) */
+  .title { margin: 0; font-family: "Germania One", Impact, sans-serif; font-weight: 400; font-size: clamp(7rem, 2rem + 13vw, 17rem); line-height: .84; letter-spacing: .01em; text-transform: uppercase; transform: skewX(-10deg); transform-origin: left bottom; background: radial-gradient(circle clamp(200px, 22vw, 420px) at var(--mx) var(--my), rgba(250, 150, 255, calc(var(--glow) * .85)), rgba(220, 120, 255, calc(var(--glow) * .45)) 45%, transparent 78%) /* light rose → soft lilac: lighter than the gradient so it shows over orange and pink */ 0 0 / 100% 100% no-repeat, linear-gradient(100deg, #F14401 0%, #FF64DD 35%, #F14401 70%, #FF64DD 100%) 0 50% / 220% 100%; -webkit-background-clip: text; background-clip: text; background-blend-mode: screen, normal; color: transparent; transition: --glow .45s ease, filter .45s ease; /* glow position follows the cursor instantly; only its fade in/out is eased */ animation: title-flow 5s ease-in-out infinite alternate; } /* campaign orange ↔ vivid pink drifting through the letters; 5s = speed (lower = faster) */
   @keyframes title-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
   /* cursor glow inside the letters */
   @property --glow { syntax: '<number>'; inherits: false; initial-value: 0; }
@@ -378,7 +378,6 @@
     .flip-inner, .reveal > svg, .reveal-info, .reveal-info > *, .cover, .cover > svg, .cover-info, .cover-info > * { transition: none !important; }
   }
 
- width: 100%; height: 120px; font: 12px/1.4 ui-monospace, Menlo, monospace; background: #2A1419; color: inherit; border: 0; border-radius: 8px; padding: 8px; resize: vertical; }
 </style>
 </head>
 <body>
@@ -554,7 +553,7 @@
 </section>
 <section class="panel cover" style="--bg:var(--ol);--on:var(--inkol)" tabindex="0" aria-label="The Steinhardt Museum of Natural History. Hover, tap or press Enter for details">
   <span class="plus" aria-hidden="true">Details</span>
-  <div class="head"><h2>The Steinhardt Museum of Natural History</h2><p class="he" lang="he" dir="rtl">מוזיאון הטבע תל אביב</p></div>
+  <div class="head"><h2>The Steinhardt Museum<br>of Natural History</h2><p class="he" lang="he" dir="rtl">מוזיאון הטבע תל אביב</p></div>
   <svg viewBox="0 0 400 340" role="img" aria-label="The Steinhardt Museum of Natural History illustration">
 <g class="nh-fly"><g class="nh-flap f-pk" style="transform-origin:96px 96px"><path d="M96,96 L72,78 A16,16 0 0 0 76,106 Z"/><path d="M96,96 L120,78 A16,16 0 0 1 116,106 Z"/></g><rect class="f-ink" x="94" y="86" width="4" height="20" rx="2"/></g>
 <path class="f-ye nh-tail" d="M158,224 Q100,234 34,288 Q100,264 158,250 Z" style="transform-origin:152px 238px"/>
