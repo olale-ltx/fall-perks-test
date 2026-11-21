@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Germania+One&display=swap" rel="stylesheet">
 <style>
   :root {
-    --page: #0E1FD8; --cr: #FFFFFF; --ink: #FF2010; --a-bg: #8AB6E8; --a-ink: #0E1FD8; --b-bg: #ECD0C8; --b-ink: #FF2010; --t1: #FFFFFF; --t2: #70B0F5; --grid-a: 16%; --bl: #8AB6E8; --ye: #ECD0C8; --or: #FF2010; --ol: #1628E6; --pk: #ECD0C8; --mv: #8AB6E8; --inkor: #FF2010; --inkol: #FF2010; /* v4 duotone: each card = pale tint + one saturated ink (A blue, B red), page = B on a grid */
+    --page: #0E1FD8; --cr: #FFFFFF; --ink: #FF2010; --a-bg: #8AB6E8; --a-ink: #0E1FD8; --b-bg: #ECD0C8; --b-ink: #FF2010; --t1: #FFFFFF; --t2: #ADD5FF; --grid-a: 16%; --bl: #8AB6E8; --ye: #ECD0C8; --or: #FF2010; --ol: #1628E6; --pk: #ECD0C8; --mv: #8AB6E8; --inkor: #FF2010; --inkol: #FF2010; /* v4 duotone: each card = pale tint + one saturated ink (A blue, B red), page = B on a grid */
     color-scheme: dark; box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
   }
@@ -408,7 +408,7 @@
   .badge { color: var(--badge); } /* rotating circle colour (Colors panel) */
   .grid { gap: calc(var(--gap, 1) * 1px); } /* v4: gap between cards (Colors panel) */
   /* info text on the back of the cards */
-  :root { --accent: #EC5FF7; --flame: var(--accent); --link: var(--accent); --hl: var(--accent); --badge: var(--accent); /* one accent colour drives highlight, badge, link hover and cursor */ --info: #161211; --pill: #E6E6E6; --speck-o: .35; --grain-o: 0; --hl-size: 370; --hl-step: 11; --hl-dot: 4.6; --gap: 1; } /* --pill = date & place pill, warm beige like v5 */
+  :root { --accent: #FF61CD; --flame: var(--accent); --link: var(--accent); --hl: var(--accent); --badge: var(--accent); /* one accent colour drives highlight, badge, link hover and cursor */ --info: #161211; --pill: #E6E6E6; --speck-o: .35; --grain-o: 0; --hl-size: 370; --hl-step: 11; --hl-dot: 4.6; --gap: 1; } /* --pill = date & place pill, warm beige like v5 */
   .grid > .panel .cover-info { color: var(--info); }
   .b-desc a, .b-desc a.ul, .side a, .side a.ul, .foot-ask, .foot-top { color: inherit; transition: color .2s ease; }
   .b-desc a:is(:hover, :focus-visible), .side a:is(:hover, :focus-visible), .foot-ask:is(:hover, :focus-visible), .foot-top:is(:hover, :focus-visible) { color: var(--link); } /* text links: same as text, pink on hover (Colors panel) */
