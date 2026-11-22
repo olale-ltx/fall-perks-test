@@ -235,7 +235,7 @@
   .cover.is-hover .cover-info > :nth-child(3), .cover:has(:focus-visible) .cover-info > :nth-child(3), .cover.is-open .cover-info > :nth-child(3) { transition-delay: .22s; }
   .cover.is-hover .cover-info > :nth-child(4), .cover:has(:focus-visible) .cover-info > :nth-child(4), .cover.is-open .cover-info > :nth-child(4) { transition-delay: .27s; }
   .cover-info .b-cta { margin-top: auto; }
-  .cover-info .b-eyebrow { margin: 0 0 12px; }
+  .cover-info .b-eyebrow { margin: 0 0 20px; } /* 20px = space between the date/place pill and the info text */
   .b-price { font-size: inherit; } .b-price b { font-weight: inherit; } .b-price span { font-size: inherit; }
 
   /* full reveal: same rising sheet as the reveal card, but it covers the whole card, so it ends fully cream */
@@ -245,7 +245,7 @@
 
   /* card content (shared by all hover styles) */
   .face-back, .reveal-info, .cover-info { display: flex; flex-direction: column; }
-  .b-desc { flex: 0 1 auto; min-height: 0; overflow-y: auto; font-size: 1rem; line-height: 1.3; /* info text size: 1rem = 16px */ scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ye) 75%, var(--cr)) transparent; padding-right: 6px; }
+  .b-desc { flex: 0 1 auto; min-height: 0; overflow-y: auto; font-size: 1.0625rem; line-height: 1.3; /* info text size: 1.0625rem = 17px */ scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ye) 75%, var(--cr)) transparent; padding-right: 6px; }
   .b-desc::-webkit-scrollbar { width: 6px; }
   .b-desc::-webkit-scrollbar-track { background: transparent; }
   .b-desc::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--ye) 75%, var(--cr)); border-radius: 999px; }
