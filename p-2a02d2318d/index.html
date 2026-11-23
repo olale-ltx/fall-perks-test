@@ -378,6 +378,12 @@
   a:hover .arr-up .a1, a:focus-visible .arr-up .a1 { transform: translateY(-115%); }
   a:hover .arr-up .a2, a:focus-visible .arr-up .a2 { transform: translateY(0); }
   @media (max-width: 760px) { .foot { grid-template-columns: minmax(0, 1fr); grid-template-areas: "q" "n"; } }
+  @media (max-width: 640px) {
+    .foot-q { font-size: 1.5rem; } /* footer sentence on phones: 24px */
+    .foot-top { width: 44px; height: 44px; padding: 0; gap: 0; justify-content: center; border: 1.5px solid currentColor; border-radius: 999px; } /* round back-to-top button, same border as the Details pill, white */
+    .foot-top .ul-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* label hidden, still read by screen readers */
+    .foot-top .arr { width: 15px; height: 15px; }
+  }
 
   /* one shared container: hero, cards and footer line up on every screen size */
   .hero, .wrap, .foot { width: 100%; max-width: 1520px; margin-left: auto; margin-right: auto; padding-left: clamp(20px, 2.5vw, 40px); padding-right: clamp(20px, 2.5vw, 40px); } /* max-width = container size */
@@ -686,7 +692,7 @@
 </main>
 <footer class="foot" id="contact">
   <p class="foot-q">Have fun &amp; stay warm!<br>For questions: <a class="foot-ask" href="slack://user?team=E04M2CLQ1LZ&amp;id=U07TNLFTT0S"><span class="ul-t">Shahar Birotker</span><span class="arr" aria-hidden="true"><svg class="a1" viewBox="0 0 16 16" focusable="false"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="a2" viewBox="0 0 16 16" focusable="false"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></p>
-  <a class="foot-top" href="#top"><span class="ul-t">Back to Top</span><span class="arr arr-up" aria-hidden="true"><svg class="a1" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="a2" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+  <a class="foot-top" href="#top" aria-label="Back to top"><span class="ul-t">Back to Top</span><span class="arr arr-up" aria-hidden="true"><svg class="a1" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="a2" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
 </footer>
 
 <script>
