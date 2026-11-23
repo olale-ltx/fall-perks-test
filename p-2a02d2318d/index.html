@@ -377,12 +377,12 @@
   .arr-up .a2 { transform: translateY(115%); }
   a:hover .arr-up .a1, a:focus-visible .arr-up .a1 { transform: translateY(-115%); }
   a:hover .arr-up .a2, a:focus-visible .arr-up .a2 { transform: translateY(0); }
+  .foot-top { width: 44px; height: 44px; min-height: 0; padding: 0; gap: 0; justify-content: center; border: 1.5px solid currentColor; border-radius: 999px; } /* round back-to-top button (all screens), same border as the Details pill, white */
+  .foot-top .ul-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* label hidden, still read by screen readers */
+  .foot-top .arr { width: 15px; height: 15px; }
   @media (max-width: 760px) { .foot { grid-template-columns: minmax(0, 1fr); grid-template-areas: "q" "n"; } }
   @media (max-width: 640px) {
     .foot-q { font-size: 1.5rem; } /* footer sentence on phones: 24px */
-    .foot-top { width: 44px; height: 44px; padding: 0; gap: 0; justify-content: center; border: 1.5px solid currentColor; border-radius: 999px; } /* round back-to-top button, same border as the Details pill, white */
-    .foot-top .ul-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* label hidden, still read by screen readers */
-    .foot-top .arr { width: 15px; height: 15px; }
   }
 
   /* one shared container: hero, cards and footer line up on every screen size */
