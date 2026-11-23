@@ -352,10 +352,10 @@
   .m-eyebrow { display: none; } /* mobile only: replaces the rotating badge */
   @media (max-width: 640px) {
     .badge { display: none; }
-    .hero { padding-top: 10px; } /* 10px = space from the top to the eyebrow on phones */
-    .m-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; padding-bottom: 9px; border-bottom: 1px solid color-mix(in srgb, var(--cr) 22%, transparent); color: var(--badge); font-weight: 500; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; line-height: 1; } /* 9px = space to the 1px divider; 20px + the grid's 24px ≈ 48px from the divider to the letters, same as from the texts to the cards */
+    .hero { padding-top: 13px; } /* 13px = space from the top to the eyebrow on phones */
+    .m-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; padding-bottom: 11px; border-bottom: 1px solid color-mix(in srgb, var(--cr) 22%, transparent); color: var(--badge); font-weight: 500; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; line-height: 1; } /* 11px = space to the 1px divider; 20px + the grid's 24px ≈ 48px from the divider to the letters, same as from the texts to the cards */
     .side { margin-top: -8px; } /* title → intro: 24px grid gap − 8px ≈ 32px from the letters to the text */
-    .m-eyebrow-sym { width: 16px; height: auto; flex: none; }
+    .m-eyebrow-sym { width: 17px; height: auto; flex: none; }
   }
   @media (max-width: 640px) { .badge { width: 102px; transform: translate(20%, -96%); } } /* mobile badge: 102px wide, 20% = shift right (keeps the ring on screen), -96% = above WINTER */
   @media (max-width: 640px) { .title { font-size: clamp(5.25rem, 26.5vw, 8.3rem); transform: translateX(-.1em) skewX(-10deg); } } /* mobile h1: 28.5vw ≈ 111px on a 390px phone, so WINTER fits; -.1em = optical left shift so the slanted letters line up with the cards */
