@@ -352,10 +352,10 @@
   .m-eyebrow { display: none; } /* mobile only: replaces the rotating badge */
   @media (max-width: 640px) {
     .badge { display: none; }
-    .hero { padding-top: 13px; } /* 13px = space from the top to the eyebrow on phones */
-    .m-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; padding-bottom: 11px; border-bottom: 1px solid color-mix(in srgb, var(--cr) 22%, transparent); color: var(--badge); font-weight: 500; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; line-height: 1; } /* 11px = space to the 1px divider; 20px + the grid's 24px ≈ 48px from the divider to the letters, same as from the texts to the cards */
+    .hero { padding-top: 16px; } /* 16px = space from the top to the eyebrow on phones */
+    .m-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; padding-bottom: 13px; border-bottom: 1px solid color-mix(in srgb, var(--cr) 22%, transparent); color: var(--badge); font-weight: 500; font-size: .875rem; letter-spacing: .12em; text-transform: uppercase; line-height: 1; } /* 13px = space to the 1px divider; 20px + the grid's 24px ≈ 48px from the divider to the letters, same as from the texts to the cards */
     .side { margin-top: -8px; } /* title → intro: 24px grid gap − 8px ≈ 32px from the letters to the text */
-    .m-eyebrow-sym { width: 17px; height: auto; flex: none; }
+    .m-eyebrow-sym { width: 19px; height: auto; flex: none; }
   }
   @media (max-width: 640px) { .badge { width: 102px; transform: translate(20%, -96%); } } /* mobile badge: 102px wide, 20% = shift right (keeps the ring on screen), -96% = above WINTER */
   @media (max-width: 640px) { .title { font-size: clamp(5.25rem, 26.5vw, 8.3rem); transform: translateX(-.1em) skewX(-10deg); } } /* mobile h1: 28.5vw ≈ 111px on a 390px phone, so WINTER fits; -.1em = optical left shift so the slanted letters line up with the cards */
@@ -367,7 +367,7 @@
   .foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "q n"; align-items: end; gap: clamp(24px, 3vw, 48px) 24px; padding: clamp(32px, 3.5vw, 56px) clamp(20px, 4vw, 64px) clamp(72px, 9vw, 140px); background: var(--page); color: var(--cr); overflow: hidden; } /* top = gap after cards, bottom = space after the sentence */
   .foot-t { grid-area: t; margin: 0; font-family: "Germania One", Impact, sans-serif; font-weight: 400; font-size: clamp(2.75rem, 1.2rem + 5vw, 6.5rem); line-height: .88; text-transform: uppercase; transform: skewX(-10deg); transform-origin: left bottom; width: fit-content; background: linear-gradient(100deg, var(--t1) 10%, var(--t2) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .foot-t span { display: block; }
-  .foot-q { grid-area: q; margin: 0; max-width: 36ch; font-size: clamp(1.25rem, 1rem + 1vw, 2rem); line-height: 1.25; letter-spacing: -.015em; }
+  .foot-q { grid-area: q; margin: 0; font-weight: 300; /* same weight as the hero intro */ max-width: 36ch; font-size: clamp(1.25rem, 1rem + 1vw, 2rem); line-height: 1.25; letter-spacing: -.015em; }
   .foot-ask { display: inline-flex; align-items: center; gap: .12em; color: inherit; text-decoration: none; }
   .foot-ask .ul-t { --ul: clamp(2px, .2vw, 3px); font-weight: inherit; background-size: 100% var(--ul); }
   .foot-ask .arr { width: .62em; height: .62em; }
@@ -383,6 +383,7 @@
   @media (max-width: 760px) { .foot { grid-template-columns: minmax(0, 1fr); grid-template-areas: "q" "n"; } }
   @media (max-width: 640px) {
     .foot-q { font-size: 1.5rem; } /* footer sentence on phones: 24px */
+    .foot-top { justify-self: end; } /* back-to-top to the right on phones */
   }
 
   /* one shared container: hero, cards and footer line up on every screen size */
@@ -691,7 +692,7 @@
   </div>
 </main>
 <footer class="foot" id="contact">
-  <p class="foot-q">Have fun &amp; stay warm!<br>For questions: <a class="foot-ask" href="slack://user?team=E04M2CLQ1LZ&amp;id=U07TNLFTT0S"><span class="ul-t">Shahar Birotker</span><span class="arr" aria-hidden="true"><svg class="a1" viewBox="0 0 16 16" focusable="false"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="a2" viewBox="0 0 16 16" focusable="false"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></p>
+  <p class="foot-q">Have fun &amp; stay warm!<br>For questions: <a class="foot-ask" href="slack://user?team=E04M2CLQ1LZ&amp;id=U07TNLFTT0S"><span class="ul-t">Shahar Birotker</span></a></p>
   <a class="foot-top" href="#top" aria-label="Back to top"><span class="ul-t">Back to Top</span><span class="arr arr-up" aria-hidden="true"><svg class="a1" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="a2" viewBox="0 0 16 16" focusable="false"><path d="M8 13V3.5M4 7.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
 </footer>
 
